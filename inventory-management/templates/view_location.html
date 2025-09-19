@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}View Location - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-eye"></i> Location Details</h1>
+            <div>
+                <a href="{{ url_for('edit_location', location_id=location.location_id) }}" class="btn btn-warning me-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{{ url_for('locations') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Locations
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3"><strong>Location ID:</strong></div>
+                    <div class="col-sm-9">{{ location.location_id }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Name:</strong></div>
+                    <div class="col-sm-9">{{ location.name }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Description:</strong></div>
+                    <div class="col-sm-9">{{ location.description or 'No description provided' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

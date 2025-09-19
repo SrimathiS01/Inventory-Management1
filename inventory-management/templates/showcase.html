@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Showcase • Inventory Management System{% endblock %}
+
+{% block content %}
+<section class="container py-4 py-md-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <div class="fade-in">
+        <h1 class="display-5 fw-bold mb-3">
+          Showcase: Smart Inventory Management
+        </h1>
+        <p class="lead mb-4">
+          A modern, data-driven inventory platform built with Flask & SQLAlchemy. 
+          Designed for clarity, speed, and insight — perfect for warehouse ops and retail.
+        </p>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-play"></i> Open Dashboard
+          </a>
+          <a href="{{ url_for('products') }}" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-box"></i> Explore Products
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card p-0 fade-in">
+        <div class="card-body">
+          <div class="d-flex align-items-start">
+            <div class="me-3">
+              <span class="badge bg-gradient-info">Live</span>
+            </div>
+            <div>
+              <h5 class="mb-1"><i class="fas fa-bolt"></i> Real-time Insights</h5>
+              <p class="mb-0">Movements, top products, and KPIs update instantly from the backend API.
+              </p>
+            </div>
+          </div>
+          <hr class="my-3">
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="h2 mb-0 counter" data-target="{{ products_count }}">0</div>
+              <div class="small text-muted">Products</div>
+            </div>
+            <div class="col-4">
+              <div class="h2 mb-0 counter" data-target="{{ locations_count }}">0</div>
+              <div class="small text-muted">Locations</div>
+            </div>
+            <div class="col-4">
+              <div class="h2 mb-0 counter" data-target="{{ movements_count }}">0</div>
+              <div class="small text-muted">Movements</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5 g-4">
+    <div class="col-md-4">
+      <div class="card h-100 fade-in">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-layer-group"></i> Clean Architecture</h5>
+          <p class="card-text">Separation of concerns with Flask blueprints-ready structure, SQLAlchemy ORM models,
+             and reusable Jinja components.
+          </p>
+          <ul class="mb-0">
+            <li>Models: Product, Location, Movement</li>
+            <li>Pages + API endpoints</li>
+            <li>Bootstrap 5 UI + custom theme</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 fade-in">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-chart-line"></i> Analytics Built-in</h5>
+          <p class="card-text">Trends, top products, and KPIs are powered by lightweight JSON APIs for a responsive experience.</p>
+          <ul class="mb-0">
+            <li>/api/metrics</li>
+            <li>/api/movements_trend</li>
+            <li>/api/top_products</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100 fade-in">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-shield-alt"></i> Robust & Scalable</h5>
+          <p class="card-text">SQLite for dev; easily switch to Postgres/MySQL by updating the URI.
+            Validation, error handling, and flash notifications included.
+          </p>
+          <ul class="mb-0">
+            <li>Secure forms</li>
+            <li>Reusable layout</li>
+            <li>Theme toggle + animations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5 align-items-center g-4">
+    <div class="col-lg-6">
+      <div class="card h-100 fade-in">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-route"></i> User Journey</h5>
+        </div>
+        <div class="card-body">
+          <ol class="mb-0">
+            <li>Add products and locations</li>
+            <li>Record stock-in/out or transfer movements</li>
+            <li>Monitor KPIs and charts on the dashboard</li>
+            <li>Review balance report for current stock by location</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card h-100 fade-in">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-toolbox"></i> Tech Stack</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-gradient-primary">Flask</span>
+            <span class="badge bg-gradient-info">SQLAlchemy</span>
+            <span class="badge bg-gradient-success">SQLite</span>
+            <span class="badge bg-gradient-warning">Bootstrap 5</span>
+            <span class="badge bg-gradient-primary">Chart.js</span>
+            <span class="badge bg-gradient-info">Font Awesome</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card fade-in">
+        <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+          <div class="mb-3 mb-md-0">
+            <h4 class="mb-1">Ready to explore the app?</h4>
+            <p class="mb-0 text-muted">Jump into the dashboard or review the database report.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="{{ url_for('index') }}" class="btn btn-primary"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="{{ url_for('balance_report') }}" class="btn btn-outline-primary"><i class="fas fa-chart-bar"></i> Balance Report</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Counter animation for quick metrics
+(function(){
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(el => {
+    const target = parseInt(el.getAttribute('data-target') || '0', 10);
+    let current = 0;
+    const steps = 30;
+    const inc = Math.max(1, Math.round(target / steps));
+    const tick = () => {
+      current += inc;
+      if (current >= target) { current = target; }
+      el.textContent = current.toLocaleString('en-IN');
+      if (current < target) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+})();
+</script>
+{% endblock %}

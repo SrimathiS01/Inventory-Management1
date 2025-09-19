@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="app-body">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-boxes"></i> Inventory Management
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-box"></i> Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('products') }}">View All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_product') }}">Add New</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="locationsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-warehouse"></i> Locations
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('locations') }}">View All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_location') }}">Add New</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="movementsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-exchange-alt"></i> Movements
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('movements') }}">View All</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('add_movement') }}">Add New</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('balance_report') }}">
+                            <i class="fas fa-chart-bar"></i> Balance Report
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('showcase') }}">
+                            <i class="fas fa-star"></i> Showcase
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <button id="themeToggle" class="btn btn-outline-light theme-toggle" type="button" title="Toggle theme">
+                        <span class="icon"><i class="fas fa-moon"></i></span>
+                        <span class="label">Theme</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-12 main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <footer class="container-fluid app-footer py-3">
+        <div class="text-center small">
+            <span>
+                <i class="fas fa-boxes"></i> Inventory Management • Powered by Flask & SQLAlchemy
+            </span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+      (function() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggle');
+
+        // Initialize theme from localStorage or prefers-color-scheme
+        const stored = localStorage.getItem('theme');
+        const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+        if (stored === 'light' || (!stored && prefersLight)) {
+          body.classList.add('theme-light');
+        }
+
+        function isLight() { return body.classList.contains('theme-light'); }
+        function updateIcon() {
+          if (!btn) return;
+          const iconEl = btn.querySelector('i');
+          if (!iconEl) return;
+          iconEl.className = isLight() ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        updateIcon();
+
+        function celebrate() {
+          if (typeof confetti !== 'function') return;
+          const colors = ['#4f46e5','#7c3aed','#16a34a','#f59e0b','#0891b2'];
+          confetti({
+            particleCount: 60,
+            spread: 60,
+            origin: { y: 0.25 },
+            colors
+          });
+        }
+
+        if (btn) {
+          btn.addEventListener('click', function() {
+            body.classList.toggle('theme-light');
+            localStorage.setItem('theme', isLight() ? 'light' : 'dark');
+            updateIcon();
+            celebrate();
+          });
+        }
+      })();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

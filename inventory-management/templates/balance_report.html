@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Balance Report - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-chart-bar"></i> Balance Report</h1>
+            <button onclick="window.print()" class="btn btn-secondary">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Current Stock Levels by Location</h5>
+                <small class="text-muted">Shows current balance quantity for each product in each location</small>
+            </div>
+            <div class="card-body">
+                {% if balance_list %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="balanceTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Product</th>
+                                <th>Warehouse</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in balance_list %}
+                            <tr>
+                                <td>
+                                    <strong>{{ item.product_id }}</strong>
+                                    <br><small class="text-muted">{{ item.product_name }}</small>
+                                </td>
+                                <td>
+                                    <strong>{{ item.location_id }}</strong>
+                                    <br><small class="text-muted">{{ item.location_name }}</small>
+                                </td>
+                                <td>
+                                    <span class="fs-5 fw-bold {% if item.qty > 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ item.qty }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if item.qty > 0 %}
+                                        <span class="badge bg-success">In Stock</span>
+                                    {% elif item.qty == 0 %}
+                                        <span class="badge bg-warning">Empty</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Negative</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-success">
+                                    <i class="fas fa-check-circle"></i> In Stock
+                                </h5>
+                                <h3 id="inStockCount">0</h3>
+                                <p class="card-text">Product-Location pairs with positive stock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Empty
+                                </h5>
+                                <h3 id="emptyCount">0</h3>
+                                <p class="card-text">Product-Location pairs with zero stock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-danger">
+                                    <i class="fas fa-times-circle"></i> Negative
+                                </h5>
+                                <h3 id="negativeCount">0</h3>
+                                <p class="card-text">Product-Location pairs with negative stock</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No Balance Data Available</h4>
+                    <p class="text-muted">Add some product movements to see balance information.</p>
+                    <a href="{{ url_for('add_movement') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add First Movement
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calculate summary statistics
+    const rows = document.querySelectorAll('#balanceTable tbody tr');
+    let inStock = 0, empty = 0, negative = 0;
+    
+    rows.forEach(row => {
+        const qtyText = row.cells[2].querySelector('.fw-bold').textContent.trim();
+        const qty = parseInt(qtyText);
+        
+        if (qty > 0) inStock++;
+        else if (qty === 0) empty++;
+        else negative++;
+    });
+    
+    document.getElementById('inStockCount').textContent = inStock;
+    document.getElementById('emptyCount').textContent = empty;
+    document.getElementById('negativeCount').textContent = negative;
+});
+
+// Print styles
+const printStyles = `
+    @media print {
+        .btn, .navbar, .card-header { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        body { font-size: 12px; }
+        .table { font-size: 11px; }
+    }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = printStyles;
+document.head.appendChild(styleSheet);
+</script>
+{% endblock %}
+{% endblock %}

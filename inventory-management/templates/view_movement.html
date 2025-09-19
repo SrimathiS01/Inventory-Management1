@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}View Movement - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-eye"></i> Movement Details</h1>
+            <div>
+                <a href="{{ url_for('edit_movement', movement_id=movement.movement_id) }}" class="btn btn-warning me-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{{ url_for('movements') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Movements
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3"><strong>Movement ID:</strong></div>
+                    <div class="col-sm-9">{{ movement.movement_id }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Timestamp:</strong></div>
+                    <div class="col-sm-9">{{ movement.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Product:</strong></div>
+                    <div class="col-sm-9">
+                        <span class="badge bg-primary">{{ movement.product_id }}</span>
+                        {% if movement.product %}
+                            - {{ movement.product.name }}
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>From Location:</strong></div>
+                    <div class="col-sm-9">
+                        {% if movement.from_location %}
+                            <span class="badge bg-warning">{{ movement.from_location }}</span>
+                            {% if movement.from_loc %}
+                                - {{ movement.from_loc.name }}
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Not specified (Stock In)</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>To Location:</strong></div>
+                    <div class="col-sm-9">
+                        {% if movement.to_location %}
+                            <span class="badge bg-success">{{ movement.to_location }}</span>
+                            {% if movement.to_loc %}
+                                - {{ movement.to_loc.name }}
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Not specified (Stock Out)</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Quantity:</strong></div>
+                    <div class="col-sm-9"><strong>{{ movement.qty }}</strong></div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3"><strong>Movement Type:</strong></div>
+                    <div class="col-sm-9">
+                        {% if not movement.from_location and movement.to_location %}
+                            <span class="badge bg-success">Stock In</span>
+                        {% elif movement.from_location and not movement.to_location %}
+                            <span class="badge bg-danger">Stock Out</span>
+                        {% elif movement.from_location and movement.to_location %}
+                            <span class="badge bg-info">Transfer</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Unknown</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
